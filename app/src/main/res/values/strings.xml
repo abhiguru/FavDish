@@ -1,7 +1,30 @@
 <resources>
     <string name="app_name">FavDish</string>
+    <string name="title_all_dishes">All Dishes</string>
+    <string name="title_favorite_dishes">Favorite</string>
+    <string name="title_random_dish">Random Dish</string>
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="splash_screen_title">Fav Dish</string>
+    <string name="add_dish">Add dish</string>
+    <string name="image_contentDescription">image</string>
+    <string name="lbl_title">Title</string>
+    <string name="lbl_type">Type</string>
+    <string name="lbl_category">Category</string>
+    <string name="lbl_ingredients">Ingredients</string>
+    <string name="lbl_cooking_time_in_minutes">Cooking Time In Minutes</string>
+    <string name="lbl_direction_to_cook">Direction To Cook</string>
+    <string name="lbl_add_dish">ADD DISH</string>
+    <string name="title_select_image_action">Select Image Action</string>
+    <string name="lbl_camera">Camera</string>
+    <string name="lbl_gallery">Gallery</string>
+    <string name="title_select_dish_type">Select Dish Type</string>
+    <string name="title_select_dish_category">Select Dish Category</string>
+    <string name="title_select_dish_cooking_time">Select Cooking time in minutes</string>
+    <string name="label_no_dishes_added_yet">No dishes added yet!!!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_dish_details">Dish Details</string>
 </resources>

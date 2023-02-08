@@ -1,4 +1,4 @@
-package `in`.tutorial.favdish.ui.notifications
+package `in`.tutorial.favdish.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import `in`.tutorial.favdish.databinding.FragmentNotificationsBinding
-import `in`.tutorial.favdish.ui.notifications.NotificationsViewModel
+import `in`.tutorial.favdish.databinding.FragmentRandomDishBinding
+import `in`.tutorial.favdish.viewmodel.NotificationsViewModel
 
-class NotificationsFragment : Fragment() {
+class RandomDishFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentRandomDishBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,7 +26,7 @@ class NotificationsFragment : Fragment() {
         val notificationsViewModel =
             ViewModelProvider(this).get(NotificationsViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentRandomDishBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textNotifications

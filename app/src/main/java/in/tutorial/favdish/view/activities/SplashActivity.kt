@@ -1,16 +1,14 @@
-package `in`.tutorial.favdish
+package `in`.tutorial.favdish.view.activities
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
+import `in`.tutorial.favdish.R
 import `in`.tutorial.favdish.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
