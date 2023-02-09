@@ -1,6 +1,7 @@
 package `in`.tutorial.favdish.view.activities
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -40,10 +41,12 @@ class MainActivity : AppCompatActivity() {
     fun hideBottomNavigationView(){
         binding.navView.clearAnimation()
         binding.navView.animate().translationY(binding.navView.height.toFloat()).duration = 300
+        binding.navView.visibility = View.GONE
     }
 
     fun showBottomNavigationView(){
         binding.navView.clearAnimation()
         binding.navView.animate().translationY(0F).duration = 300
+        binding.navView.visibility = View.VISIBLE
     }
 }

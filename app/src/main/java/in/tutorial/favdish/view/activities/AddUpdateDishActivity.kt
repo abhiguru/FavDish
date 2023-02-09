@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -61,7 +62,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private val mFavDishViewModel : FavDishViewModel by viewModels {
         FavDishViewModelFactory((application as FavDishApplication).repository)
     }
-
+    private var mFavDishDetails: FavDish? = null
     val resLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
                 result ->
@@ -131,7 +132,31 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityAddUpdateDishBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+        if(intent.hasExtra(Constants.EXTRA_DISH_DETAILS)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mFavDishDetails = intent.getParcelableExtra(Constants.EXTRA_DISH_DETAILS, FavDish::class.java)
+            }else{
+                @Suppress("DEPRECATION")
+                mFavDishDetails = intent.getParcelableExtra(Constants.EXTRA_DISH_DETAILS)
+            }
+        }
         setupActionBar()
+        mFavDishDetails?.let {
+            if(it.id!=0){
+               imagePath = it.image
+                Glide.with(this)
+                    .load(it.image)
+                    .centerCrop()
+                    .into(binding!!.ivDishImage)
+                binding?.etTitle?.setText(it.title)
+                binding?.etType?.setText(it.type)
+                binding?.etIngredients?.setText(it.ingredients)
+                binding?.etCategory?.setText(it.category)
+                binding?.etCookingTime?.setText(it.cookingTime)
+                binding?.etDirectionToCook?.setText(it.directionToCook)
+                binding?.btnAddDish?.text = resources.getString(R.string.lbl_update_dish)
+            }
+        }
         binding?.ivAddDishImage?.setOnClickListener(this)
         binding?.etType?.setOnClickListener(this)
         binding?.etCategory?.setOnClickListener(this)
@@ -141,6 +166,15 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private fun setupActionBar(){
         setSupportActionBar(binding!!.toolbarAddDishActivity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if(mFavDishDetails!=null && mFavDishDetails!!.id != 0){
+            supportActionBar?.let {
+                it.title = resources.getString(R.string.title_edit_dish)
+            }
+        }else{
+            supportActionBar?.let {
+                it.title = resources.getString(R.string.title_add_dish)
+            }
+        }
         binding?.toolbarAddDishActivity!!.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -204,23 +238,39 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                                 "Cooking direction not entered", Toast.LENGTH_SHORT).show()
                         }
                         else->{
+                            var dishId = 0
+                            var imageSource = Constants.DISH_IMAGE_SOURCE_LOCAL
+                            var favoriteDish = false
+                            mFavDishDetails?.let {
+                                if(it.id!=0){
+                                    dishId = it.id
+                                    imageSource = it.imageSource
+                                    favoriteDish = it.favoriteDish
+                                }
+                            }
                             val favDishDetails:FavDish = FavDish(
                                 imagePath,
-                                Constants.DISH_IMAGE_SOURCE_LOCAL,
+                                imageSource,
                                 title,
                                 type,
                                 category,
                                 ingredients,
                                 cookingTimeInMinutes,
                                 cookingDirection,
-                                favoriteDish = false
+                                favoriteDish = favoriteDish,
+                                id = dishId
                             )
-                            Toast.makeText(this@AddUpdateDishActivity,
-                                "You have denied perms2.", Toast.LENGTH_SHORT).show()
-                            mFavDishViewModel.insert(favDishDetails)
-                            Toast.makeText(this@AddUpdateDishActivity,
-                                "You have denied perms.", Toast.LENGTH_SHORT).show()
-                            Log.e("Insertion","Success")
+                            if(dishId == 0){
+                                mFavDishViewModel.insert(favDishDetails)
+                                Toast.makeText(this@AddUpdateDishActivity,
+                                    "You have created dish", Toast.LENGTH_SHORT).show()
+                                Log.e("Insertion","Success")
+                            }else{
+                                mFavDishViewModel.update(favDishDetails)
+                                Toast.makeText(this@AddUpdateDishActivity,
+                                    "You have update dish", Toast.LENGTH_SHORT).show()
+                                Log.e("Updation","Success")
+                            }
                             finish()
                         }
                     }
@@ -334,7 +384,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         customListDialog.setContentView(binding.root)
         binding.tvTitle.text = title
         binding.rvList.layoutManager = LinearLayoutManager(this)
-        val adapter = CustomListItemAdapter(this, itemsList, selection)
+        val adapter = CustomListItemAdapter(this, null, itemsList, selection)
         binding.rvList.adapter = adapter
         customListDialog.show()
     }
